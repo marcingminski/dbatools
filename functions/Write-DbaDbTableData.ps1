@@ -233,7 +233,7 @@ function Write-DbaDbTableData {
 
             if ($Pscmdlet.ShouldProcess($SqlInstance, "Writing $rowCount rows to $Fqtn")) {
                 foreach ($prop in $DataTable.Columns.ColumnName) {
-                    $bulkCopy.ColumnMappings.Add($prop, $prop)
+                    $null = $bulkCopy.ColumnMappings.Add($prop, $prop)
                 }
 
                 $bulkCopy.WriteToServer($DataTable)
@@ -446,7 +446,7 @@ function Write-DbaDbTableData {
         try {
             $server = Connect-SqlInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
         } catch {
-            Stop-Function -Message "Error occured while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $SqlInstance
+            Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $SqlInstance
             return
         }
 
@@ -500,7 +500,7 @@ function Write-DbaDbTableData {
         if ($Truncate -eq $true) {
             if ($Pscmdlet.ShouldProcess($SqlInstance, "Truncating $fqtn")) {
                 try {
-                    Write-Message -Level Output -Message "Truncating $fqtn."
+                    Write-Message -Level Verbose -Message "Truncating $fqtn."
                     $null = $server.Databases[$databaseName].Query("TRUNCATE TABLE $fqtn")
                 } catch {
                     Write-Message -Level Warning -Message "Could not truncate $fqtn. Table may not exist or may have key constraints." -ErrorRecord $_

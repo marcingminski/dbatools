@@ -101,9 +101,10 @@ function Read-DbaBackupHeader {
     )
 
     begin {
-        foreach ($p in $path) {
-            if ([System.IO.Path]::GetExtension($p).Length -eq 0) {
-                Stop-Function -Message "Path ($p) should be a file, not a folder" -Category InvalidArgument
+        foreach ($p in $Path) {
+            Write-Message -Level Verbose -Message "Checking: $p"
+            if ([System.IO.Path]::GetExtension("$p").Length -eq 0) {
+                Stop-Function -Message "Path ("$p") should be a file, not a folder" -Category InvalidArgument
                 return
             }
         }
@@ -111,7 +112,7 @@ function Read-DbaBackupHeader {
         try {
             $server = Connect-SqlInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
         } catch {
-            Stop-Function -Message "Error occured while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
+            Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             return
         }
         $getHeaderScript = {
